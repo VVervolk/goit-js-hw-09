@@ -9,13 +9,12 @@ const createPromise = (position, delay) => {
   return new Promise((resolve, reject) => {
     const shouldResolve = Math.random() > 0.3;
     setTimeout(() => {
-      console.log(delay);
       if (shouldResolve) {
         resolve({ position, delay });
       } else {
         reject({ position, delay });
       }
-    });
+    }, delay);
   });
 };
 
@@ -29,14 +28,13 @@ buttonForCreate.addEventListener('click', ev => {
   let counter = 0;
   let finalDelay = delayValue;
 
-  const promiseLoop = setInterval(() => {
+  let promiseLoop = setInterval(() => {
     counter += 1;
 
     if (counter > amountValue) {
       clearInterval(promiseLoop);
       return;
     }
-    finalDelay += stepValue;
 
     createPromise(counter, finalDelay)
       .then(({ position, delay }) => {
@@ -45,5 +43,6 @@ buttonForCreate.addEventListener('click', ev => {
       .catch(({ position, delay }) => {
         Notify.failure(`❌ Rejected promise ${position} in ${delay}ms`);
       });
+    finalDelay += stepValue;
   }, finalDelay);
 });
